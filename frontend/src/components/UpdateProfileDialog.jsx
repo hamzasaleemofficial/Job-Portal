@@ -18,7 +18,7 @@ import { toast } from "sonner";
 import { setUser } from "@/redux/authSlice";
 
 const UpdateProfileDialog = ({ open, setOpen }) => {
-  const [loading, isLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 

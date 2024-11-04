@@ -67,7 +67,7 @@ const Profile = () => {
               target="blank"
               href="https://www.google.com/"
             >
-              Hamza Devops Engineer
+              {user?.profile?.resumeOriginalName}
             </a>
           ) : (
             <span>NA</span>

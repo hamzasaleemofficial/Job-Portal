@@ -2,6 +2,10 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const userModel = require("../models/userModel");
+const getDataUri = require("../utils/datauri");
+const cloudinary = require('../utils/cloudinary')
+
+
 
 const signup = async (req, res) => {
   try {
@@ -106,7 +110,11 @@ const profileUpdate = async (req, res) => {
     const { fullname, email, skills, phoneNumber, bio } = req.body;
 
     const file = req.file;
-// Cloudinary for resume upload
+  // Cloudinary for resume upload
+    const fileUri = getDataUri(file);
+    console.log(cloudinary);
+    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+
     
     let skillsArray;
     if (skills) {
@@ -125,6 +133,11 @@ const profileUpdate = async (req, res) => {
     if (skills) user.profile.skills = skillsArray
     if (phoneNumber) user.phoneNumber = phoneNumber
     if (bio) user.profile.bio = bio
+
+    if(cloudResponse){
+      user.profile.resume = cloudResponse.secure_url; // save the cloudinary url
+      user.profile.resumeOriginalName = file.originalname;  // Save the original file name
+    }
 
     await user.save();
 

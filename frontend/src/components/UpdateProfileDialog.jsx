@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
-import { Loader2 } from "lucide-react";
-import { Button } from "./ui/button";
+import {  Loader2 } from "lucide-react";
+import { Button } from "./ui/button"
+
 import {
   Dialog,
   DialogContent,
@@ -35,11 +36,12 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
   };
 
   const changeFileHandler = (e) => {
-    setInput({...input, file :e.target.files?.[0]});
-  }
+    setInput({ ...input, file: e.target.files?.[0] });
+  };
 
-  const submitHandler = async(e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
+    
     const formData = new FormData();
     formData.append("fullname", input.fullname);
     formData.append("email", input.email);
@@ -51,6 +53,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
     }
 
     try {
+      setLoading(true);
       const response = await axios.post(
         `${USER_API_END_POINT}/profileUpdate`,
         formData,
@@ -65,15 +68,17 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         dispatch(setUser(response.data.user));
         toast.success(response.data.message);
       }
-      
     } catch (error) {
       console.log(error);
       toast.success(error.response.data.message);
-      
+    } finally{
+      setLoading(false);
     }
     setOpen(false);
+   
     console.log(input);
-  }
+    console.log(loading);
+  };
 
   return (
     <div>
@@ -86,7 +91,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
             <DialogTitle>Update Profile</DialogTitle>
           </DialogHeader>
 
-          <form  onSubmit={submitHandler}>
+          <form onSubmit={submitHandler}>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="fullname" className="text-right">
@@ -176,7 +181,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
             <DialogFooter>
               {loading ? (
                 <Button className=" w-full my-4">
-                  <Loader2 className="mr-2 h-4 w-4" />
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Please wait
                 </Button>
               ) : (

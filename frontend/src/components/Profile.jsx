@@ -65,7 +65,7 @@ const Profile = () => {
             <a
               className="text-blue-500 w-full hover:underline cursor-pointer"
               target="blank"
-              href="https://www.google.com/"
+              href={user?.profile?.resume}
             >
               {user?.profile?.resumeOriginalName}
             </a>

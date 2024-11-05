@@ -96,12 +96,12 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
-    return res
-      .statu(200)
-      .cookie(token, "", { maxAge: 0 })
-      .json({ message: "logout successfully", success: true });
+    return res.status(200).cookie("token", "", { maxAge: 0 }).json({ 
+      message: "Logged out successfully", 
+      success: true 
+    });
   } catch (error) {
-    res.statu(500).json({ message: "Internal Server Error", success: false });
+    res.status(500).json({ message: "Internal Server Error", success: false });
   }
 };
 
@@ -112,7 +112,6 @@ const profileUpdate = async (req, res) => {
     const file = req.file;
   // Cloudinary for resume upload
     const fileUri = getDataUri(file);
-    console.log(cloudinary);
     const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
 
     

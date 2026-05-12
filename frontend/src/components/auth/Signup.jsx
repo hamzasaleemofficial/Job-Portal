@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../shared/Navbar";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { USER_API_END_POINT } from "@/utils/constant";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 const Signup = () => {
   const [input, setInput] = useState({
@@ -20,6 +21,7 @@ const Signup = () => {
   });
 
   const navigate = useNavigate();
+  const {user} = useSelector(state => state.auth)
 
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -62,6 +64,14 @@ const Signup = () => {
       toast.success(error.response.data.message);
     }
   };
+
+  useEffect(() => {
+    if(user){
+      navigate("/")
+    }
+  },[])
+
+
   return (
     <div>
       <Navbar />

@@ -3,16 +3,30 @@ import { Button } from "./ui/button";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { useNavigate } from "react-router-dom";
+import { formatDistanceToNow } from "date-fns";
+import useGetAllJobs from "@/hooks/useGetAllJobs";
 
-const Job = () => {
+const Job = ({job}) => {
 
   const navigate = useNavigate();
-  const jobId = 'djoewjoiewjij';
+
+  // const calculateDaysAgo = (date) => {
+  //   const createdDate = new Date(date);
+  //   const currentDate = new Date();
+  //   const differenceInTime = currentDate - createdDate; // Difference in milliseconds
+  //   const differenceInDays = Math.floor(differenceInTime / (1000 * 60 * 60 * 24)); // Convert to days
+  //   return differenceInDays === 0 ? 'Today' : `${differenceInDays} days ago`;
+  //}
+  
+    const creationAt = job?.createdAt;
+    const daysAgo = formatDistanceToNow(new Date(creationAt), {addSuffix: true});
+  
+  
 
   return (
     <div className="p-5 rounded-md shadow-xl bg-white border border-gray-100">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-500">2 days ago</p>
+        <p className="text-sm text-gray-500">{daysAgo}</p>
         <Button variant="outline" className="rounded-full" size="icon">
           <Bookmark />
         </Button>
@@ -20,29 +34,27 @@ const Job = () => {
       <div className="flex items-center gap-2 my-2">
         <Button className="p-6" variant="outline" size="icon">
           <Avatar>
-            <AvatarImage src="https://www.shutterstock.com/shutterstock/photos/2174926871/display_1500/stock-vector-circle-line-simple-design-logo-blue-format-jpg-png-eps-2174926871.jpg" />
+            <AvatarImage src={job?.company?.logo} />
           </Avatar>
         </Button>
         <div>
-          <h1 className="font-medium text-lg">Compnay Name</h1>
-          <p className="text-sm text-gray-500">Germany</p>
+          <h1 className="font-medium text-lg">{job?.company?.name}</h1>
+          <p className="text-sm text-gray-500">{job?.location}</p>
         </div>
       </div>
       <div>
-        <h1 className="font-bold text-lg my-2">Title</h1>
+        <h1 className="font-bold text-lg my-2">{job?.title}</h1>
         <p className="text-sm text-gray-600">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed
-          obcaecati, iste unde deserunt doloribus suscipit tempore sint
-          repudiandae quaerat consequuntur.
+          {job?.description}
         </p>
       </div>
       <div className="flex items-center gap-2 mt-4">
-        <Badge className={'text-blue-700 font-bold'} variant="ghost">12 Positions</Badge>
-        <Badge className={'text-[#F83002] font-bold'} variant="ghost">Full Time</Badge>
-        <Badge className={'text-[#7209b7] font-bold'} variant="ghost">1.3 CR</Badge>
+        <Badge className={'text-blue-700 font-bold'} variant="ghost">{job?.position} Positions</Badge>
+        <Badge className={'text-[#F83002] font-bold'} variant="ghost">{job?.jobType}</Badge>
+        <Badge className={'text-[#7209b7] font-bold'} variant="ghost">{job?.salary} $</Badge>
       </div>
       <div className="flex items-center gap-4 mt-5">
-        <Button onClick={() => navigate(`/description/${jobId}`)} variant="outline">Details</Button>
+        <Button onClick={() => navigate(`/description/${job?._id}`)} variant="outline">Details</Button>
         <Button className="bg-[#6A38C2]">Save for later</Button>
       </div>
     </div>

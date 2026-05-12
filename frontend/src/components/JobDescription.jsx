@@ -1,30 +1,82 @@
+import { useDispatch, useSelector } from "react-redux";
 import Navbar from "./shared/Navbar";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { APPLICATION_API_END_POINT, JOB_API_END_POINT } from "@/utils/constant";
+import { setSingleJob } from "@/redux/jobSlice";
+import { toast } from "sonner";
+APPLICATION_API_END_POINT
+
 
 const JobDescription = () => {
-  const isApplied = false;
+  
+  const {id} = useParams();
+  const dispatch = useDispatch();
+  const {singleJob} = useSelector(state => state.job);
+  const {user} = useSelector(state => state.auth);
+
+  const initallyApplied = singleJob?.applications?.some(application => application.applicant === user?._id) || false;
+  const [isApplied, setIsApplied] = useState(initallyApplied);
+  console.log(isApplied);
+  
+  const applyJobHandler = async() => {
+    try {
+        const response = await axios.get(`${APPLICATION_API_END_POINT}/applyJob/${id}`, {withCredentials: true});
+        if(response.data.success) {
+          setIsApplied(true); // update the local state
+          const updatedSingleJob = {...singleJob, applications:[...singleJob.applications, {applicant:user._id}]};
+          dispatch(setSingleJob(updatedSingleJob)); // helps us to update the realtime UI date
+          toast.success(response.data.message);
+        }
+
+    } catch (error) {
+        toast.success(error.response.data.message);
+    }
+  }
+  
+
+  useEffect(() => {
+    const fetchSingleJob = async() => {
+      try {
+          const response = await axios.get(`${JOB_API_END_POINT}/getJobById/${id}`, {withCredentials: true});
+          console.log(response.data.job);
+          if(response.data.success){
+            dispatch(setSingleJob(response.data.job));
+
+            // Ensure the state is in sync with fetched data
+            setIsApplied(response.data.job.applications.some(application => application.applicant === user._id)); 
+          }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchSingleJob();
+  },[id, dispatch, user?._id])
   return (
     <div>
       <Navbar />
-
+          
       <div className="max-w-7xl mx-auto my-10">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="font-bold text-xl">Devops Engineer</h1>
+            <h1 className="font-bold text-xl">{singleJob?.title}</h1>
             <div className="flex items-center gap-2 mt-4">
               <Badge className={"text-blue-700 font-bold"} variant="ghost">
-                12 Positions
+                {singleJob?.position} Positions
               </Badge>
               <Badge className={"text-[#F83002] font-bold"} variant="ghost">
-                Full Time
+              {singleJob?.jobType}
               </Badge>
               <Badge className={"text-[#7209b7] font-bold"} variant="ghost">
-                1.3 CR
+              {singleJob?.salary} USD
               </Badge>
             </div>
           </div>
           <Button
+            onClick = {isApplied ? null : applyJobHandler}
             disabled={isApplied}
             className={`rounded-lg ${
               isApplied
@@ -35,15 +87,15 @@ const JobDescription = () => {
             {isApplied ? "Already Applied" : "Apply Now"}
           </Button>
         </div>
-        <h1 className="border-b-2 border-b-gray-300 font-medium py-5">Job Description</h1>
+        <h1 className="border-b-2 border-b-gray-300 font-medium py-5">{singleJob?.description}</h1>
         <div className="my-4">
-          <h1 className="font-bold my-1">Role:<span className="pl-4 font-normal text-gray-800">Devops Engineer</span></h1>
-          <h1 className="font-bold my-1">Location:<span className="pl-4 font-normal text-gray-800">Berlin</span></h1>
-          <h1 className="font-bold my-1">Description:<span className="pl-4 font-normal text-gray-800">Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis, fuga!</span></h1>
-          <h1 className="font-bold my-1">Experience:<span className="pl-4 font-normal text-gray-800">+4 Years</span></h1>
-          <h1 className="font-bold my-1">Salary:<span className="pl-4 font-normal text-gray-800">85k Euro</span></h1>
-          <h1 className="font-bold my-1">Total Application:<span className="pl-4 font-normal text-gray-800">7</span></h1>
-          <h1 className="font-bold my-1">Posted Date:<span className="pl-4 font-normal text-gray-800">29-10-2024</span></h1>
+          <h1 className="font-bold my-1">Role:<span className="pl-4 font-normal text-gray-800">{singleJob?.title}</span></h1>
+          <h1 className="font-bold my-1">Location:<span className="pl-4 font-normal text-gray-800">{singleJob?.location}</span></h1>
+          <h1 className="font-bold my-1">Description:<span className="pl-4 font-normal text-gray-800">{singleJob?.description}</span></h1>
+          <h1 className="font-bold my-1">Experience:<span className="pl-4 font-normal text-gray-800">{singleJob?.experience} Years</span></h1>
+          <h1 className="font-bold my-1">Salary:<span className="pl-4 font-normal text-gray-800">{singleJob?.salary} USD</span></h1>
+          <h1 className="font-bold my-1">Total Application:<span className="pl-4 font-normal text-gray-800">{singleJob?.applications?.length}</span></h1>
+          <h1 className="font-bold my-1">Posted Date:<span className="pl-4 font-normal text-gray-800">{singleJob?.createdAt.split('T')[0]}</span></h1>
         </div>
       </div>
     </div>

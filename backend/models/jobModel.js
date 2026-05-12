@@ -11,7 +11,11 @@ const jobSchema = new Schema({
         type: String,
         required: true
     },
-    requirements: {
+    requirements:[ {
+        type: String,
+        required: true
+    }],
+    role: {
         type: String,
         required: true
     },
@@ -19,7 +23,7 @@ const jobSchema = new Schema({
         type: Number,
         required: true
     },
-    experienceLevel: {
+    experience: {
         type: Number,
         required: true
     },
@@ -37,18 +41,18 @@ const jobSchema = new Schema({
     },
     company: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Company',
+        ref: 'company',
         required: true
     },
-    createdBy: {
+    created_by: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'user',
         required: true
     },
     applications: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Application'
+            ref: 'application'
         }
     ]
 }, {timestamps: true});

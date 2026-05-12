@@ -3,20 +3,22 @@ const jwt = require("jsonwebtoken");
 
 const userModel = require("../models/userModel");
 const getDataUri = require("../utils/datauri");
-const cloudinary = require('../utils/cloudinary')
-
-
+const cloudinary = require("../utils/cloudinary");
 
 const signup = async (req, res) => {
   try {
-    const { fullname, email, phoneNumber ,password, role } = req.body;
-    
+    const { fullname, email, phoneNumber, password, role } = req.body;
 
-    if (!fullname || !email || !phoneNumber || !password || !role  ) {
+    if (!fullname || !email || !phoneNumber || !password || !role) {
       res
         .status(401)
         .json({ message: "Please fill all required fields", success: false });
     }
+
+    const file = req.file;
+    const fileUri = getDataUri(file);
+    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
       return res.status(401).json({
@@ -24,7 +26,16 @@ const signup = async (req, res) => {
         success: false,
       });
     }
-    const user =  new userModel({fullname, email,phoneNumber ,password, role});
+    const user = new userModel({
+      fullname,
+      email,
+      phoneNumber,
+      password,
+      role,
+      profile: {
+        profilePhoto: cloudResponse.secure_url,
+      },
+    });
     user.password = await bcrypt.hash(password, 10);
     await user.save();
     return res
@@ -90,15 +101,15 @@ const login = async (req, res) => {
         success: true,
       });
   } catch (error) {
-    res.statu(500).json({ message: "Internal Server Error", success: false });
+    res.status(500).json({ message: "Internal Server Error", success: false });
   }
 };
 
 const logout = async (req, res) => {
   try {
-    return res.status(200).cookie("token", "", { maxAge: 0 }).json({ 
-      message: "Logged out successfully", 
-      success: true 
+    return res.status(200).cookie("token", "", { maxAge: 0 }).json({
+      message: "Logged out successfully",
+      success: true,
     });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error", success: false });
@@ -110,11 +121,10 @@ const profileUpdate = async (req, res) => {
     const { fullname, email, skills, phoneNumber, bio } = req.body;
 
     const file = req.file;
-  // Cloudinary for resume upload
+    // Cloudinary for resume upload
     const fileUri = getDataUri(file);
     const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
 
-    
     let skillsArray;
     if (skills) {
       skillsArray = skills.toString().split(",");
@@ -127,15 +137,15 @@ const profileUpdate = async (req, res) => {
         .json({ message: "User not found", success: false });
     }
     //updating data
-    if (fullname) user.fullname = fullname
-    if (email) user.email = email
-    if (skills) user.profile.skills = skillsArray
-    if (phoneNumber) user.phoneNumber = phoneNumber
-    if (bio) user.profile.bio = bio
+    if (fullname) user.fullname = fullname;
+    if (email) user.email = email;
+    if (skills) user.profile.skills = skillsArray;
+    if (phoneNumber) user.phoneNumber = phoneNumber;
+    if (bio) user.profile.bio = bio;
 
-    if(cloudResponse){
+    if (cloudResponse) {
       user.profile.resume = cloudResponse.secure_url; // save the cloudinary url
-      user.profile.resumeOriginalName = file.originalname;  // Save the original file name
+      user.profile.resumeOriginalName = file.originalname; // Save the original file name
     }
 
     await user.save();

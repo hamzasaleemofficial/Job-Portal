@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../shared/Navbar";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -21,7 +21,7 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
-  const {loading} = useSelector(state => state.auth);
+  const {loading, user} = useSelector(state => state.auth);
   // console.log(loading);
 
   const changeEventHandler = (e) => {
@@ -48,8 +48,18 @@ const Login = () => {
     } catch (error) {
       console.log(error);
       toast.success(error.response.data.message);
-    } 
+    } finally{
+      dispatch(setLoading(false));
+    }
+    
   };
+
+
+  useEffect(() => {
+    if(user){
+      navigate("/")
+    }
+  },[])
 
   return (
     <div>
@@ -113,7 +123,7 @@ const Login = () => {
           { loading ?
             
             <Button className=" w-full my-4">
-              <Loader2 className="mr-2 h-4 w-4" />
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Please wait
             </Button>
             :

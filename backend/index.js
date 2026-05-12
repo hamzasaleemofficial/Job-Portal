@@ -5,6 +5,9 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const { config } = require("dotenv");
 const UserRouter = require("./routes/userRoutes");
+const jobRouter = require("./routes/jobRoutes");
+const companyRouter = require("./routes/companyRoutes");
+const applicationRouter = require("./routes/applicationRoute");
 
 app.use(bodyParser.json());
 const corsOptions = {
@@ -20,6 +23,11 @@ require("./db/config");
 const PORT = process.env.PORT || 8080;
 
 app.use("/user", UserRouter);
+app.use("/job", jobRouter);
+app.use("/company",companyRouter);
+app.use("/application", applicationRouter);
+
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

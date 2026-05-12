@@ -10,7 +10,6 @@ import UpdateProfileDialog from "./UpdateProfileDialog";
 import { useSelector } from "react-redux";
 
 const Profile = () => {
-  const isHaveResume = true;
   const { user } = useSelector((state) => state.auth);
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
@@ -61,7 +60,7 @@ const Profile = () => {
         </div>
         <div className="grid w-full max-w-sm items-center gap-1.5 mt-4">
           <Label className="text-md font-bold">Resume</Label>
-          {isHaveResume ? (
+          {user?.profile?.resume ? (
             <a
               className="text-blue-500 w-full hover:underline cursor-pointer"
               target="blank"

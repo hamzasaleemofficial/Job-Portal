@@ -1,6 +1,10 @@
 const applicationModel = require("../models/applicationModel");
 const jobModel = require("../models/jobModel");
 
+
+
+
+
 const applyJob = async (req, res) => {
   try {
     const userId = req.id;
@@ -43,6 +47,7 @@ const applyJob = async (req, res) => {
       message: "job applied successfully",
       success: true,
     });
+    
   } catch (error) {
     console.log(error.message);
   }
@@ -82,16 +87,17 @@ const getAppliedJobs = async (req, res) => {
 const getApplicants = async (req, res) => {
   try {
     const jobId = req.params.id;
-    const job = jobModel.find({ job: jobId }).populate({
+    const job = await jobModel.findById(jobId).populate({
       path: "applications",
-      options: { sort: { createdAt: -1 } },
-      populate: {
-        path: "applicant",
-      },
+      options: {sort:{createdAt:-1}},
+      populate:{
+        path:"applicant"
+    }
     });
+   
 
     if (!job) {
-      return res.status(400).josn({
+      return res.status(400).json({
         message: "Job not found",
         success: false,
       });
@@ -105,17 +111,17 @@ const getApplicants = async (req, res) => {
   }
 };
 
-const updateJobStatus = async (req, res) => {
+const updateApplicationStatus = async (req, res) => {
   try {
-    const status = req.body;
+    const {status} = req.body;
     if (!status) {
       return res.status(400).json({
         message: "status is required",
         success: false,
       });
     }
-    const applicationId = req.param.id;
-    const application = await applicationModel.findOne({ _id: applicationId });
+    const applicationId = req.params.id;
+    const application = await applicationModel.findOne({_id: applicationId});
     if (!application) {
       return res.status(404).json({
         message: "Application not found.",
@@ -123,13 +129,22 @@ const updateJobStatus = async (req, res) => {
       });
     }
     //update application status
-    application.status = status.toLowerCase();
+    console.log(application.status);
+    application.status = String(status).toLowerCase();
     await application.save();
     return res.status(200).json({
         message: "Job Application status updated successfully",
+        application,
         success: true
     })
   } catch (error) {
     console.log(error.message);
   }
 };
+
+module.exports = {
+  applyJob,
+  getAppliedJobs,
+  getApplicants,
+  updateApplicationStatus
+}

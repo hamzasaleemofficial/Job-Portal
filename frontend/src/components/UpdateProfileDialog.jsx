@@ -9,7 +9,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
-import { Input } from "./ui/Input";
+
+
+import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";

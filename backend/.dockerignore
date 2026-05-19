@@ -1,0 +1,33 @@
+# Ignore node modules
+node_modules
+
+# Logs
+*.log
+
+# Environment variables
+
+
+# Git files
+.git
+.gitignore
+
+# Docker files themselves
+Dockerfile
+.dockerignore
+
+# OS/system files
+.DS_Store
+Thumbs.db
+
+# Build output
+dist
+build
+
+# IDE/editor files
+.vscode
+.idea
+
+# Temporary files
+tmp
+temp
+*.swp

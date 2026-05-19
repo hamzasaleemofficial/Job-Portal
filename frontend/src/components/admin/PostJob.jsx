@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import axios from "axios";
-import { JOB_API_END_POINT } from "@/utils/constant";
+import { REACT_APP_API_URI } from "@/utils/constant";
 import {
   Select,
   SelectContent,
@@ -57,7 +57,7 @@ const PostJob = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        `${JOB_API_END_POINT}/postjobs`,
+        `${REACT_APP_API_URI}/job/postjobs`,
         input,
         {
           headers: {

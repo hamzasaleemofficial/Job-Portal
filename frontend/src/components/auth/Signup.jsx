@@ -6,7 +6,7 @@ import { RadioGroup } from "../ui/radio-group";
 import { Button } from "../ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { USER_API_END_POINT } from "@/utils/constant";
+import { REACT_APP_API_URI} from "@/utils/constant";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
 
@@ -45,7 +45,7 @@ const Signup = () => {
 
     try {
       const response = await axios.post(
-        `${USER_API_END_POINT}/signup`,
+        `${REACT_APP_API_URI}/user/signup`,
         formData,
         {
           headers: {

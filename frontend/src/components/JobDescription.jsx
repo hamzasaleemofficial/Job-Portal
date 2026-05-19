@@ -5,10 +5,10 @@ import { Button } from "./ui/button";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { APPLICATION_API_END_POINT, JOB_API_END_POINT } from "@/utils/constant";
+import { REACT_APP_API_URI} from "@/utils/constant";
 import { setSingleJob } from "@/redux/jobSlice";
 import { toast } from "sonner";
-APPLICATION_API_END_POINT
+
 
 
 const JobDescription = () => {
@@ -24,7 +24,7 @@ const JobDescription = () => {
   
   const applyJobHandler = async() => {
     try {
-        const response = await axios.get(`${APPLICATION_API_END_POINT}/applyJob/${id}`, {withCredentials: true});
+        const response = await axios.get(`${REACT_APP_API_URI}/application/applyJob/${id}`, {withCredentials: true});
         if(response.data.success) {
           setIsApplied(true); // update the local state
           const updatedSingleJob = {...singleJob, applications:[...singleJob.applications, {applicant:user._id}]};
@@ -41,7 +41,7 @@ const JobDescription = () => {
   useEffect(() => {
     const fetchSingleJob = async() => {
       try {
-          const response = await axios.get(`${JOB_API_END_POINT}/getJobById/${id}`, {withCredentials: true});
+          const response = await axios.get(`${REACT_APP_API_URI}/job/getJobById/${id}`, {withCredentials: true});
           console.log(response.data.job);
           if(response.data.success){
             dispatch(setSingleJob(response.data.job));

@@ -3,7 +3,7 @@ import Navbar from '../shared/Navbar';
 import ApplicantsTable from './ApplicantsTable';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { APPLICATION_API_END_POINT } from '@/utils/constant';
+import { REACT_APP_API_URI } from '@/utils/constant';
 import axios from 'axios';
 import { setAllApplicants } from '@/redux/applicationSlice';
 
@@ -21,7 +21,7 @@ const Applicants = () => {
 
         try {
            
-            const response = await axios.get(`${APPLICATION_API_END_POINT}/getApplicants/${params?.id}`, {withCredentials: true});
+            const response = await axios.get(`${REACT_APP_API_URI}/application/getApplicants/${params?.id}`, {withCredentials: true});
             console.log('data',response.data.success)
             if(response.data.success){
                 dispatch(setAllApplicants(response.data.job));

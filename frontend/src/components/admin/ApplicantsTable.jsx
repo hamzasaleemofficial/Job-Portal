@@ -5,7 +5,7 @@ import { MoreHorizontal } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { toast } from 'sonner';
 import axios from 'axios';
-import { APPLICATION_API_END_POINT } from '@/utils/constant';
+import { REACT_APP_API_URI } from '@/utils/constant';
 
 
 
@@ -20,7 +20,7 @@ const ApplicantsTable = () => {
         try {
 
             axios.defaults.withCredentials = true;
-            const response = await axios.post(`${APPLICATION_API_END_POINT}/updateApplicationStatus/${id}`, {status});
+            const response = await axios.post(`${REACT_APP_API_URI}/application/updateApplicationStatus/${id}`, {status});
             console.log(response.data);
            if(response.data.success){
             toast.success(response.data.message);

@@ -16,7 +16,8 @@ import { Label } from "./ui/label";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { USER_API_END_POINT } from "@/utils/constant";
+import { REACT_APP_API_URI} from "@/utils/constant";
+
 import { toast } from "sonner";
 import { setUser } from "@/redux/authSlice";
 
@@ -57,7 +58,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
     try {
       setLoading(true);
       const response = await axios.post(
-        `${USER_API_END_POINT}/profileUpdate`,
+        `${REACT_APP_API_URI}/user/profileUpdate`,
         formData,
         {
           headers: {

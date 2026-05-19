@@ -9,7 +9,7 @@ dist/
 build/
 
 # Ignore environment variables
-.env
+
 
 # Ignore logs
 *.log

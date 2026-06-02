@@ -6,7 +6,7 @@ const router = require('express').Router();
 
 
 
-router.post('/signup', singleUpload, signup);
+router.post('/signup', signup);
 router.post('/login', login);
 router.get('/logout',logout);
 router.post('/profileUpdate',isAuthenticated, singleUpload,profileUpdate);

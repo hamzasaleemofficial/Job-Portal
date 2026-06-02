@@ -24,12 +24,12 @@ const companySchema = new Schema({
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user',
+      ref: 'users',
       required: true,
     },
   },
   { timestamps: true }
 );
 
-const companyModel = mongoose.model('company', companySchema);
+const companyModel = mongoose.model('companies', companySchema);
 module.exports = companyModel;

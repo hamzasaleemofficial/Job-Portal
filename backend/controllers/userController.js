@@ -15,9 +15,9 @@ const signup = async (req, res) => {
         .json({ message: "Please fill all required fields", success: false });
     }
 
-    const file = req.file;
-    const fileUri = getDataUri(file);
-    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+    // const file = req.file;
+    // const fileUri = getDataUri(file);
+    // const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
 
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
@@ -32,9 +32,9 @@ const signup = async (req, res) => {
       phoneNumber,
       password,
       role,
-      profile: {
-        profilePhoto: cloudResponse.secure_url,
-      },
+      // profile: {
+      //   profilePhoto: cloudResponse.secure_url,
+      // },
     });
     user.password = await bcrypt.hash(password, 10);
     await user.save();
@@ -49,13 +49,14 @@ const signup = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password, role } = req.body;
-
+    console.log(email,password,role);
     if (!email || !password || !role) {
-      res
+     return res
         .status(401)
         .json({ message: "Please fill all required fields", success: false });
     }
     let user = await userModel.findOne({ email });
+    console.log(user , 'USER');
     if (!user) {
       return res.status(401).json({
         message: "User is not registered",
@@ -64,11 +65,11 @@ const login = async (req, res) => {
     }
     const isPasswordEqual = await bcrypt.compare(password, user.password);
     if (!isPasswordEqual) {
-      res.status(404).json({ message: errorMessage, success: false });
+      return res.status(404).json({ message: errorMessage, success: false });
     }
     //check user role
     if (role != user.role) {
-      res.status(401).json({
+      return res.status(401).json({
         message: "You don't have permission to access with this role",
       });
     }
@@ -76,9 +77,11 @@ const login = async (req, res) => {
     const tokenData = {
       userId: user._id,
     };
+    console.log(tokenData,"token data")
     const jwtToken = jwt.sign(tokenData, process.env.SECRET_KEY, {
       expiresIn: "1d",
     });
+    console.log(jwtToken, 'jwt token');
 
     user = {
       _id: user._id,

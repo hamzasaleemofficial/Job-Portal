@@ -39,9 +39,9 @@ const Signup = () => {
     formData.append("phoneNumber", input.phoneNumber);
     formData.append("password", input.password);
     formData.append("role", input.role);
-    if (input.file) {
-      formData.append("file", input.file);
-    }
+    // if (input.file) {
+    //   formData.append("file", input.file);
+    // }
 
     try {
       const response = await axios.post(
@@ -49,7 +49,7 @@ const Signup = () => {
         formData,
         {
           headers: {
-            "Content-type": "multipart/form-data",
+            "Content-type": "application/json",
           },
           withCredentials: true,
         }

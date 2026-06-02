@@ -7,7 +7,7 @@ import Navbar from "./shared/Navbar";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import useGetAppliedJobs from "@/hooks/useGetAppliedJobs";
+
 
 
 const Home = () => {

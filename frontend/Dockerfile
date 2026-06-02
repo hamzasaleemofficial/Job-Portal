@@ -1,6 +1,8 @@
-# build frontend
 
-FROM node:22
+
+# Build stage
+
+FROM node:22-alpine AS build
 
 WORKDIR /app
 
@@ -10,7 +12,19 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 5173
+# EXPOSE 5173
 
-CMD ["npm", "run", "dev"]
+# CMD ["npm", "run", "dev"]
+
+RUN npm run build
+
+# Production stage
+
+FROM nginx:alpine AS prod
+
+COPY --from=build /app/build /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
 

@@ -4,7 +4,7 @@ import { Avatar, AvatarImage } from "./ui/avatar";
 import { Badge } from "./ui/badge";
 import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
-import useGetAllJobs from "@/hooks/useGetAllJobs";
+
 
 const Job = ({job}) => {
 

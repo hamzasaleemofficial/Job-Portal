@@ -27,27 +27,31 @@ const Login = () => {
 
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
-    //console.log(e.target.value);
+    console.log(e.target.value);
   };
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
+    console.log(REACT_APP_API_URI);
+
     try {
       dispatch(setLoading(true));
       const response = await axios.post(`${REACT_APP_API_URI}/user/login`, input, {
+        
         headers: {
           "Content-Type": "application/json",
         },
         withCredentials: true,
       });
       if (response.data.success) {
+        console.log(response.data);
         dispatch(setUser(response.data.user));
         navigate("/");
         toast.success(response.data.message);
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
       toast.success(error.response.data.message);
     } finally{
       dispatch(setLoading(false));

@@ -16,11 +16,13 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+// app.use(express.static('public'));
+// app.use(express.static('public/dist'));
 app.use(cookieParser());
 
 require("dotenv").config();
 require("./db/config");
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 5000;
 
 app.use("/user", UserRouter);
 app.use("/job", jobRouter);

@@ -1,0 +1,43 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    networks:
+      - mern-network
+    environment:  
+      SECRET_KEY: ferifefoefmfkrfnrffnfoefkfmeofiemrfemo
+      MONGO_URI: mongodb+srv://hamzakhan:hamza123@cluster0.sem6y.mongodb.net/JOB-PORTAL?retryWrites=true&w=majority
+    depends_on:
+      - mongodb
+
+  frontend:
+    build: ./frontend
+    ports: 
+      - "80:80"
+    networks:
+      - mern-network
+    environment: 
+      REACT_APP_API_URI: http://localhost:5000
+
+  mongodb:
+    image: mongo:8
+    ports:
+      - "27017:27017"
+    networks:
+      - mern-network
+    volumes:
+      - mongo-data:/data/db
+    
+networks:
+  mern-network:
+    driver: bridge
+
+volumes: 
+  mongo-data:
+    driver: local
+      
+  
+      
+
+

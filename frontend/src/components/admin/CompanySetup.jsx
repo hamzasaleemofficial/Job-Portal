@@ -7,7 +7,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { toast } from "sonner";
 import axios from "axios";
-import { COMPANY_API_END_POINT } from "@/utils/constant";
+import { REACT_APP_API_URI } from "@/utils/constant";
 import { setSingleCompany } from "@/redux/companySlice";
 import { useDispatch, useSelector } from "react-redux";
 import useGetComapnyById from "@/hooks/useGetCompanyById";
@@ -52,7 +52,7 @@ const CompanySetup = () => {
     try {
       setLoading(true);
       const response = await axios.put(
-        `${COMPANY_API_END_POINT}/updateCompany/${params.id}`,
+        `${REACT_APP_API_URI}/company/updateCompany/${params.id}`,
         formData,
         {
           headers: {
